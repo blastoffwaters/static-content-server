@@ -14,7 +14,7 @@ app.get("/", (req: Request, res: Response) => {
     server: "Static File Server",
     accessing_on: req.hostname,
     version: "DEV (not implemented)",
-    github_repo: "https://github.com/(placeholder)",
+    github_repo: "https://github.com/blastoffwaters/static-content-server",
     auth_valid: (req.headers['authorization'] === `Bearer ${process.env.API_KEY}`),
   });
 });
@@ -22,8 +22,13 @@ app.get("/", (req: Request, res: Response) => {
 app.get("/healthz", (req: Request, res: Response) => {
   res.contentType("application/json");
   res.json({
+    uptime: process.uptime(),
+    message: 'Ok',
+    date: new Date()
   });
 });
+
+app.use(express.static('public'));
 
 if (process.env.NODE_ENV !== "test") { startServer(); }
 
