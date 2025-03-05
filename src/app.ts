@@ -28,7 +28,9 @@ app.get("/healthz", (req: Request, res: Response) => {
   });
 });
 
-app.use(express.static('public'));
+app.use(express.static('public', { cacheControl: true, setHeaders: function(res, path) { 
+  res.setHeader("Cache-Control","max-age=3600,");  
+}}));
 
 if (process.env.NODE_ENV !== "test") { startServer(); }
 
