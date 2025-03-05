@@ -6,16 +6,17 @@ dotenv.config();
 export const app: Express = express();
 const port = process.env.PORT || 6677;
 
-app.use(express.json());
-
 app.get("/", (req: Request, res: Response) => {
+  res.sendFile('home.html', { root: __dirname });
+});
+
+app.get("/hello", (req: Request, res: Response) => {
   res.contentType("application/json");
   res.json({
     server: "Static File Server",
     accessing_on: req.hostname,
     version: "DEV (not implemented)",
     github_repo: "https://github.com/blastoffwaters/static-content-server",
-    auth_valid: (req.headers['authorization'] === `Bearer ${process.env.API_KEY}`),
   });
 });
 
@@ -29,7 +30,7 @@ app.get("/healthz", (req: Request, res: Response) => {
 });
 
 app.use(express.static('public', { cacheControl: true, setHeaders: function(res, path) { 
-  res.setHeader("Cache-Control","max-age=3600,");  
+  res.setHeader("Cache-Control","max-age=86400,");
 }}));
 
 if (process.env.NODE_ENV !== "test") { startServer(); }
