@@ -21,10 +21,7 @@ FROM node:alpine
 
 WORKDIR /app
 
-# Copy only the necessary files from the build stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /app ./
 
 EXPOSE 6677
 CMD ["node", "/app/dist/app.js"]
