@@ -1,5 +1,5 @@
 import { describe, expect } from '@jest/globals';
-import { app, startServer, getPublicFolderContents } from '../src/app.ts';
+import { app, startServer, getPublicFolderContents } from '../src/app';
 import supertest, { Response } from 'supertest';
 import { Server } from 'http';
 

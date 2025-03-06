@@ -1,5 +1,5 @@
 import { describe, expect } from '@jest/globals';
-import { app } from '../src/app.ts';
+import { app } from '../src/app';
 import supertest, { Response } from 'supertest';
 
 describe("GET /README.txt", () => {
