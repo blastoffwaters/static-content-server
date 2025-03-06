@@ -44,4 +44,4 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Start the Express application
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/app.js"]
