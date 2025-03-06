@@ -27,7 +27,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 expressjs
@@ -38,10 +38,7 @@ COPY --from=builder /app/dist ./dist
 USER expressjs
 
 EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-ENV PORT 3000
-# set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
-
-# Start the Express application
-CMD ["node", "dist/app.js"]
+CMD ["node", "dist/app.cjs"]
