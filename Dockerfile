@@ -4,8 +4,8 @@ WORKDIR /app
 COPY . .
 RUN npm install
 # safety for compiling
-RUN npm install -D typescript
 RUN npm uninstall tsc
+RUN npm install -D typescript
 
 RUN npm run build
 
