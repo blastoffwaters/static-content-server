@@ -16,10 +16,40 @@ app.get("/", (req: Request, res: Response) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Static Files</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+      body {
+        background-color: #ccc;
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        margin: 1em 0;
+        text-align: center;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        padding: 1em;
+        border-bottom: 1px solid black;
+      }
+      li:last-child {
+        border-bottom: none;
+      }
+      a {
+        text-decoration: none;
+        color: #00698f;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      i {
+        color: #666;
+      }
+    </style>
   </head>
   <body>
-    <h1>Static Files</h1>
+    <h1>Files</h1>
     <ul>
       ${files.map(file => `
         <li>
@@ -52,7 +82,7 @@ app.get("/healthz", (req: Request, res: Response) => {
   });
 });
 
-app.use(express.static('public', { cacheControl: true, setHeaders: function(res, path) { 
+app.use(express.static('public', { cacheControl: true, setHeaders: function(res) { 
   res.setHeader("Cache-Control","max-age=86400, public");
 }}));
 
@@ -66,10 +96,13 @@ export function startServer() {
 
 export function getPublicFolderContents() {
   const publicFolderContents: string[] = [];
-  const entries = fs.readdirSync("public", {recursive: true, withFileTypes: true});
+  const entries = fs.readdirSync("public", { recursive: true, withFileTypes: true });
   for (const entry of entries) {
     if (entry.isDirectory()) continue;
-    publicFolderContents.push(entry.parentPath.replace(/public\//g, "") + "/" + entry.name);
+    const path = entry.parentPath + "/" + entry.name;
+    if (path.startsWith("public/")) {
+      publicFolderContents.push(path.substring("public/".length));
+    }
   }
   return publicFolderContents;
 }
