@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import { readdirSync } from "fs";
+import fs from "fs";
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ export const app: Express = express();
 const port = process.env.PORT || 6677;
 
 app.get("/", (req: Request, res: Response) => {
-  const files = JSON.parse(getPublicFolderContents());
+  const files = getPublicFolderContents();
   res.send(`
   <!DOCTYPE html>
   <html lang="en">
@@ -21,9 +21,9 @@ app.get("/", (req: Request, res: Response) => {
   <body>
     <h1>Static Files</h1>
     <ul>
-      ${Object.keys(files).map(file => `
+      ${files.map(file => `
         <li>
-          <i class="fas fa-fw ${files[file] === 'file' ? 'fa-file' : 'fa-folder'}"></i>
+          <i class="fas fa-fw fa-file"></i>
           <a href="${file}">${file}</a>
         </li>
       `).join('')}
@@ -39,7 +39,7 @@ app.get("/json", (req: Request, res: Response) => {
     server: "Static File Server",
     version: "DEV (not implemented)",
     github_repo: "https://github.com/blastoffwaters/static-content-server",
-    files: JSON.parse(getPublicFolderContents())
+    files: getPublicFolderContents()
   });
 });
 
@@ -65,10 +65,11 @@ export function startServer() {
 }
 
 export function getPublicFolderContents() {
-  const publicFolderContents: { [name: string]: 'file' | 'folder' } = {};
-  const entries = readdirSync('public', { withFileTypes: true });
+  const publicFolderContents: string[] = [];
+  const entries = fs.readdirSync("public", {recursive: true, withFileTypes: true});
   for (const entry of entries) {
-    publicFolderContents[entry.name] = entry.isDirectory() ? 'folder' : 'file';
+    if (entry.isDirectory()) continue;
+    publicFolderContents.push(entry.parentPath.replace(/public\//g, "") + "/" + entry.name);
   }
-  return JSON.stringify(publicFolderContents, null, 2);
+  return publicFolderContents;
 }

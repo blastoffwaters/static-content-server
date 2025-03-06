@@ -1,5 +1,5 @@
 import { describe, expect } from '@jest/globals';
-import { app, startServer } from '../src/app.ts';
+import { app, startServer, getPublicFolderContents } from '../src/app.ts';
 import supertest, { Response } from 'supertest';
 import { Server } from 'http';
 
@@ -17,6 +17,11 @@ describe("GET /", () => {
   it("should return the user-viewable HTML with a list of files and links to them", async () => {
     const res: Response = await supertest(app).get(`/`);
     expect(res.statusCode).toBe(200);
-    
+    const files = JSON.parse(getPublicFolderContents());
+    Object.keys(files).forEach(file => {
+      const fileLink = `<a href="${file}">${file}</a>`;
+      expect(res.text).toContain(fileLink);
+    });
+
   });
 });
