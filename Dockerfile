@@ -37,8 +37,8 @@ COPY --from=builder /app/dist ./dist
 
 USER expressjs
 
-EXPOSE 3000
-ENV PORT=3000
+EXPOSE 6677
+ENV PORT=6677
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "dist/app.cjs"]
