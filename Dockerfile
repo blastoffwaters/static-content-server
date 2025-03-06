@@ -3,6 +3,10 @@ ENV NODE_ENV production
 WORKDIR /app
 COPY . .
 RUN npm install
+# safety for compiling
+RUN npm install -D typescript
+RUN npm uninstall tsc
+
 RUN npm run build
 
 FROM node:alpine
