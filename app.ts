@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import fs from "fs";
+import escape from "escape-html";
 
 dotenv.config();
 
@@ -54,7 +55,7 @@ app.get("/", (req: Request, res: Response) => {
       ${files.map(file => `
         <li>
           <i class="fas fa-fw fa-file"></i>
-          <a href="${file}">${file}</a>
+          <a href="${escape(file)}">${escape(file)}</a>
         </li>
       `).join('')}
     </ul>
