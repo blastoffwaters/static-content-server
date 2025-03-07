@@ -41,4 +41,7 @@ EXPOSE 6677
 ENV PORT=6677
 ENV HOSTNAME="0.0.0.0"
 
+ARG IMAGE_TAG="No Version Available"
+ENV IMAGE_TAG=${IMAGE_TAG:-"No Version Available"}
+
 CMD ["node", "dist/app.cjs"]

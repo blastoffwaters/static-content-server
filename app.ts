@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import fs from "fs";
 import escape from "escape-html";
+import { Server } from "http";
 
 dotenv.config();
 
@@ -68,7 +69,7 @@ app.get("/json", (req: Request, res: Response) => {
   res.contentType("application/json");
   res.json({
     server: "Static File Server",
-    version: "DEV (not implemented)",
+    version: process.env.IMAGE_TAG || "No Version Available",
     github_repo: "https://github.com/blastoffwaters/static-content-server",
     files: getPublicFolderContents()
   });
@@ -87,11 +88,20 @@ app.use(express.static('public', { cacheControl: true, setHeaders: function(res)
   res.setHeader("Cache-Control","max-age=86400, public");
 }}));
 
-if (process.env.NODE_ENV !== "test") { startServer(); }
+if (process.env.NODE_ENV !== "test") { 
+  const server: Server = startServer(); 
+  process.on('SIGTERM', () => {
+    console.log('[server] SIGTERM signal received: closing Static Content Server')
+    server.close(() => {
+      console.log('[server] HTTP server closed')
+    })
+  })
+}
 
-export function startServer() {
+export function startServer(): Server {
   return app.listen(port, () => {
-    console.log(`[server] Server is running at http://localhost:${port}`);
+    console.log(`[server] Static Content Server is running at http://localhost:${port}`);
+    console.log(`[server] Version ${process.env.IMAGE_TAG || "(unavailable)"} by Blast Off Waters`);
   });
 }
 

@@ -9,6 +9,11 @@ describe("GET /json", () => {
     const res: Response = await supertest(app).get(`/json`);
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res.text).server).toBe("Static File Server");
+    expect(JSON.parse(res.text).version).toBe("jest-testing");
+    const files = getPublicFolderContents();
+    files.forEach(file => {
+      expect(JSON.parse(res.text).files).toContain(file);
+    });
     server.close();
   });
 });
